@@ -1,0 +1,19 @@
+{
+  "name": "d3-helper",
+  "version": "1.0.0",
+  "description": "d3辅助工具库，用于生成常用的坐标轴，tooltip等",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/callmedadaxin/d3-helper.git"
+  },
+  "author": "athon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/callmedadaxin/d3-helper/issues"
+  },
+  "homepage": "https://github.com/callmedadaxin/d3-helper#readme"
+}
