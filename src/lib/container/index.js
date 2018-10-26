@@ -1,11 +1,12 @@
 import * as d3 from 'd3'
-import { transformPosition } from '../utils';
+import { transformPosition, deepMerge } from '../utils';
 import Axis from '../axis'
+import baseConfig from './config'
 
 export default class Container {
   constructor (target, config) {
     this.target = target
-    this.config = config
+    this.config = deepMerge(baseConfig, config)
     this.renderContainer ()
     this.scale = this.getScale()
   }
@@ -63,19 +64,19 @@ export default class Container {
     const xScale = this.getResultScaleByValue('x', xAxis, data)
     const yScale = this.getResultScaleByValue('y', yAxis, data)
 
-    const x = new Axis(this.wrap, {
-      ...xAxis,
+    const x = new Axis(this.wrap, xAxis, {
       type: 'x',
       scale: xScale,
       height: this.height,
       width: this.width,
+      data
     })
-    const y = new Axis(this.wrap, {
-      ...yAxis,
+    const y = new Axis(this.wrap, yAxis, {
       type: 'y',
       scale: yScale,
       height: this.height,
       width: this.width,
+      data
     })
   }
 }
