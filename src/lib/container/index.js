@@ -78,5 +78,11 @@ export default class Container {
       width: this.width,
       data
     })
+    return {
+      width: this.width,
+      height: this.height,
+      xScale,
+      yScale
+    }
   }
 }

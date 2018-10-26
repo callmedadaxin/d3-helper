@@ -1,8 +1,8 @@
 # d3-helper
 d3辅助工具库，用于生成常用的坐标轴，tooltip等
 
-## Aixs
-通过配置快速生成坐标轴，可定义各种样式
+## Container
+通过配置快速生成容器及坐标轴坐标轴，可定义各种样式
 
 ### 简介
 1.每个坐标轴主要有以下元素：
@@ -20,6 +20,30 @@ d3辅助工具库，用于生成常用的坐标轴，tooltip等
 3.ticks可以控制每个坐标轴展示的数量
 这里对d3.ticks做了改进，可以精确按照设置的梳理进行展示
 
+### 使用方式
+``` js
+componentDidMount = () => {
+  const target = d3.select(this.graph)
+  const container = new Container(target, config)
+
+  // 通过render渲染容器，并可获取容器内部的数据结果
+  const {
+    width, // 容器内部宽高，计算数据对应的长度时，请用此值进行计算
+    height,
+    xScale, // 数据的scale, 用于计算宽高
+    yScale
+  } = container.render([{
+    type: 'a',
+    value: 100
+  }, {
+    type: 'b',
+    value: 200
+  }, {
+    type: 'c',
+    value: 150
+  }])
+}
+```
 
 ### 全部配置
 ``` js
