@@ -9,8 +9,8 @@ class App extends Component {
     return (
       <Fragment>
         <Base />
-        <Time />
-        <Style1 />
+        {/* <Time /> */}
+        {/* <Style1 /> */}
       </Fragment>
     );
   }

@@ -1,10 +1,8 @@
 import Container from './container'
-
-export default {
-  Container
-}
+import Axis from './axis'
 
 export {
-  Container
+  Container,
+  Axis
 }
 
