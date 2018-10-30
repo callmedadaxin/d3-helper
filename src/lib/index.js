@@ -1,8 +1,8 @@
 import Container from './container'
-import Axis from './axis'
+// import Axis from './axis'
 
 export {
   Container,
-  Axis
+  // Axis
 }
 

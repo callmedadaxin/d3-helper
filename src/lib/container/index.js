@@ -1,14 +1,11 @@
-import React, { PureComponent, cloneElement } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { transformPosition, filterReactChildren } from '../utils';
+import { withTooltip, Tooltip } from '../tooltip'
+import { localPoint } from '@vx/event';
 import { Group } from '@vx/group'
-import * as d3 from 'd3'
+import { bisector } from 'd3'
 
-export default class Container extends PureComponent {
-  state = {
-    scaleX: null,
-    scaleY: null
-  }
+class Container extends PureComponent {
   static propTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
@@ -24,6 +21,29 @@ export default class Container extends PureComponent {
       bottom: 20
     }
   }
+  showLineTooltip = ({event, data, xScale}) => {
+    const { showTooltip, x } = this.props
+    const { x: posX } = localPoint(event)
+    const x0 = xScale.invert(posX)
+    const bisect = bisector(x).left
+    const index = bisect(data, x0, 1)
+    const d0 = data[index - 1];
+
+    showTooltip({
+      tooltipData: d0,
+      tooltipLeft: x + 10,
+      tooltipTop: 20,
+    });
+  }
+  showBasicTooltip = ({event, data}) => {
+    const { showTooltip } = this.props
+    const { x, y } = localPoint(event)
+    showTooltip({
+      tooltipTop: y,
+      tooltipLeft: x + 10,
+      tooltipData: data
+    })
+  }
   /**
    * 获取去除边界后容器的宽高，以给坐标轴等留出距离
    */
@@ -35,50 +55,38 @@ export default class Container extends PureComponent {
       height: height - padding.top - padding.bottom
     }
   }
-  setSingleScale = (type, scale) => {
-    this.setState({
-      [`scale${type.toUpperCase()}`]: scale
-    })
-  }
-  filterChildren (flag, props, show = true) {
-    const { children } = this.props
-    return show
-      ? filterReactChildren(children, flag).map(child => cloneElement(child, props))
-      : null
-  }
   render() {
-    const { width, height, padding, data, x, y, scaleX, scaleY, children } = this.props
+    const { width, height, padding, tooltip,
+      hideTooltip, tooltipData, tooltipTop, tooltipLeft,
+      children } = this.props
     const size = this.getContainerSize()
-    // const xScale = scaleX({
-    //   rangeRound: [0, size.width],
-    //   domain: data.map(x)
-    // });
-    // const yScale = scaleY({
-    //   rangeRound: [size.height, 0],
-    //   domain: [0, d3.max(data, y)]
-    // });
-
-    // const props = {
-    //   ...size,
-    //   data,
-    //   xScale,
-    //   yScale
-    // }
-    // const axis = this.filterChildren('axis', props)
-    // const graph = this.filterChildren(undefined, props)
-
+    
     return (
       <div>
-        <svg width={width} height={height} ref={target => (this.target = target)}>
+        <svg width={width} height={height}>
           <Group top={padding.top} left={padding.left}>
-            {
-              children(size)
-            }
-            {/* {axis}
-            {graph} */}
+            {children({
+              ...size,
+              showBasicTooltip: this.showBasicTooltip,
+              showLineTooltip: this.showLineTooltip,
+              hideTooltip
+            })}
           </Group>
         </svg>
+        {
+          tooltipData
+            ? <Tooltip
+              top={tooltipTop - 12}
+              left={tooltipLeft + 12}
+            >
+              {tooltip && tooltip(tooltipData)}
+            </Tooltip>
+            : ''
+        }
       </div>
+      
     )
   }
 }
+
+export default withTooltip(Container)

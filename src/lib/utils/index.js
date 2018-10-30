@@ -1,23 +1,4 @@
-import _ from 'lodash'
 import React from 'react'
-
-export const transformPosition = (x, y) => {
-  return `translate(${x}, ${y})`
-}
-
-export const isFunction = item => typeof item === 'function'
-
-export const isNumber = item => typeof item === 'number'
-
-export const deepMerge = (base, next) => {
-  return _.mergeWith({}, base, next, mergeCustomizer)
-}
-
-function mergeCustomizer (res, obj, src, a, b, c) {
-  if (_.isObject(src)) {
-    return deepMerge(obj, src)
-  }
-}
 
 // 固定展示轴的内容
 export const tickValues = (num, range) => {
@@ -31,8 +12,6 @@ export const tickValues = (num, range) => {
   return [min, ...result, max]
 }
 
-export const filterReactChildren = (children, name) => {
-  return React.Children.toArray(children).filter(element => {
-    return _.get(element, 'type.elementType') === name
-  })
+export const withConfig = config => (WrappedComponent) => (props) => {
+  return <WrappedComponent {...config} {...props}/>
 }
