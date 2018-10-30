@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import React from 'react'
 
 export const transformPosition = (x, y) => {
   return `translate(${x}, ${y})`
@@ -28,4 +29,10 @@ export const tickValues = (num, range) => {
     result.push(min + i * n)
   }
   return [min, ...result, max]
+}
+
+export const filterReactChildren = (children, name) => {
+  return React.Children.toArray(children).filter(element => {
+    return _.get(element, 'type.elementType') === name
+  })
 }

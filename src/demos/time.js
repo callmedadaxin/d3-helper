@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3'
-import { Container } from '../lib'
+import { Container, Axis } from '../lib'
+import Graph from './graph'
 
 const config = {
-  width: 1000,
-  height: 200,
   padding: {
     top: 10,
     right: 10,
@@ -12,12 +11,8 @@ const config = {
     bottom: 30
   },
   xAxis: {
-    type: 'time',
-    getter: d => d.time,
-    line: {
-      ticks: {
-        num: 3
-      }
+    ticks: {
+      num: 2
     },
     text: {
       formatter: d => new Date(d).getDate() + '日'
@@ -27,20 +22,18 @@ const config = {
     }
   },
   yAxis: {
-    type: 'value',
     getter: d => d.value,
     splitLine: {
-      show: false
+      show: true,
+      ticks: 4
     }
   }
 }
 
 class App extends Component {
-  componentDidMount = () => {
-    const target = d3.select(this.graph)
-    const container = new Container(target, config)
+  render() {
     const dayTime = 24 * 3600 * 1000
-    container.render([{
+    const data = [{
       time: Date.now() - dayTime * 3,
       value: 100
     }, {
@@ -50,15 +43,17 @@ class App extends Component {
       time: Date.now() - dayTime,
       value: 200
     }, {
-      type: Date.now(),
+      time: Date.now(),
       value: 150
-    }])
-  }
-  render() {
+    }]
     return (
       <div>
         <h2>坐标轴为时间</h2>
-        <svg width="1000" height="200" ref={graph => (this.graph = graph)}></svg>
+        <Container data={data} padding={config.padding}>
+          <Axis type="time" position="x" getter={d => d.time} config={config.xAxis}/>
+          <Axis type="value" range={[50, 300]} position="y" getter={d => d.value} config={config.yAxis}/>
+          <Graph />
+        </Container>
       </div>
     );
   }

@@ -1,7 +1,8 @@
 import React, { PureComponent, cloneElement } from 'react'
 import PropTypes from 'prop-types'
+import { transformPosition, filterReactChildren } from '../utils';
+import { Group } from '@vx/group'
 import * as d3 from 'd3'
-import { transformPosition, deepMerge } from '../utils';
 
 export default class Container extends PureComponent {
   state = {
@@ -13,10 +14,9 @@ export default class Container extends PureComponent {
     height: PropTypes.number,
     padding: PropTypes.object
   }
-
   static defaultProps = {
     width: 1000,
-    height: 100,
+    height: 200,
     padding: {
       top: 20,
       right: 20,
@@ -35,59 +35,50 @@ export default class Container extends PureComponent {
       height: height - padding.top - padding.bottom
     }
   }
+  setSingleScale = (type, scale) => {
+    this.setState({
+      [`scale${type.toUpperCase()}`]: scale
+    })
+  }
+  filterChildren (flag, props, show = true) {
+    const { children } = this.props
+    return show
+      ? filterReactChildren(children, flag).map(child => cloneElement(child, props))
+      : null
+  }
   render() {
-    const { width, height, padding, data, children } = this.props
+    const { width, height, padding, data, x, y, scaleX, scaleY, children } = this.props
     const size = this.getContainerSize()
-    const containerTransform = transformPosition(padding.left, padding.top)
+    // const xScale = scaleX({
+    //   rangeRound: [0, size.width],
+    //   domain: data.map(x)
+    // });
+    // const yScale = scaleY({
+    //   rangeRound: [size.height, 0],
+    //   domain: [0, d3.max(data, y)]
+    // });
+
+    // const props = {
+    //   ...size,
+    //   data,
+    //   xScale,
+    //   yScale
+    // }
+    // const axis = this.filterChildren('axis', props)
+    // const graph = this.filterChildren(undefined, props)
+
     return (
       <div>
         <svg width={width} height={height} ref={target => (this.target = target)}>
-          <g className="svg-container" transform={containerTransform}>
-          {
-            React.Children.map(children, child => cloneElement(child, {
-              ...size,
-              data: data,
-              setSingleScale: this.setSingleScale
-            }))
-          }
-          </g>
+          <Group top={padding.top} left={padding.left}>
+            {
+              children(size)
+            }
+            {/* {axis}
+            {graph} */}
+          </Group>
         </svg>
       </div>
     )
   }
 }
-
-
-// export default class Container {
-//   constructor (target, config) {
-//     this.renderContainer ()
-//     this.scale = this.getScale()
-//   }
-  
-//   render (data) {
-//     const { xAxis, yAxis } = this.config
-//     const xScale = this.getResultScaleByValue('x', xAxis, data)
-//     const yScale = this.getResultScaleByValue('y', yAxis, data)
-
-//     const x = new Axis(this.wrap, xAxis, {
-//       type: 'x',
-//       scale: xScale,
-//       height: this.height,
-//       width: this.width,
-//       data
-//     })
-//     const y = new Axis(this.wrap, yAxis, {
-//       type: 'y',
-//       scale: yScale,
-//       height: this.height,
-//       width: this.width,
-//       data
-//     })
-//     return {
-//       width: this.width,
-//       height: this.height,
-//       xScale,
-//       yScale
-//     }
-//   }
-// }
