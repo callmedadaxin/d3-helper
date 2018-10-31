@@ -1,8 +1,8 @@
-import Container from './container'
-// import Axis from './axis'
-
-export {
-  Container,
-  // Axis
-}
-
+export { default as Container } from './container'
+export { AxisLeft, AxisBottom, AxisTop, AxisRight } from './axis'
+export { Grid, GridRows, GridColumns } from './grid'
+export { Line, Bar, LinePath, AreaClosed } from './shape'
+export { withTooltip, Tooltip } from './tooltip'
+export { tickValues, withConfig } from './utils'
+export { Group } from '@vx/group'
+export { scaleBand, scalePoint, scaleLinear, scaleTime, scaleLog, scalePower } from '@vx/scale'

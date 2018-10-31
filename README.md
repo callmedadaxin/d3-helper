@@ -11,9 +11,25 @@ d3图形库，在[vx](https://github.com/hshoff/vx)上的二次封装
 4. vx默认样式并不符合我们的要求，重复的设置各种props时，跟我们使用d3的过程其实类似，依旧复杂
 5. 我们需要一种可变的复用单元。
 
+## API
+其他请直接从@vx中引用
+
+- Container
+- AxisLeft, AxisBottom, AxisTop, AxisRight
+- Grid, GridRows, GridColumns
+- Line, Bar, LinePath, AreaClosed
+- withTooltip, Tooltip
+- tickValues, withConfig
+- Group
+- scaleBand, scalePoint, scaleLinear, scaleTime, scaleLog, scalePower
+
 ## 使用方式
 vx非常巧妙的定义了各种图形单元，支持以声明式使用图形单元进行拼接，
 我们对vx的默认样式进行了重置，并且添加了Container元素，用于定义图形容器
+
+``` js
+npm i d3-vx-helper
+```
 
 ``` js
 import { appleStock } from '@vx/mock-data'

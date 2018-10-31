@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { Container } from '../lib'
 import * as d3 from 'd3'
 // import Graph from './graph'
 // import { AxisBottom, AxisLeft } from '@vx/axis'
 import { letterFrequency, appleStock } from '@vx/mock-data';
 import { scaleBand, scaleLinear, scaleTime } from '@vx/scale'
 import { Group } from '@vx/group'
-import { AxisLeft, AxisBottom, AxisRight, AxisTop } from '../lib/axis'
-import { Grid, GridRows } from '../lib/grid'
-import { Bar, LinePath, AreaClosed } from '../lib/shape'
+import { Container, AxisLeft, AxisBottom, AxisRight, AxisTop } from '../main'
+// import { Grid, GridRows } from '../lib/grid'
+// import { Bar, LinePath, AreaClosed } from '../lib/shape'
 
 const x = d => new Date(d.date);
 const y = d => +d.close;
@@ -39,7 +38,7 @@ class App extends Component {
               })
 
               return <Group>
-                <Grid width={width} height={height} xScale={xScale} yScale={yScale}/>
+                {/* <Grid width={width} height={height} xScale={xScale} yScale={yScale}/> */}
                 <AxisBottom top={height} scale={xScale}/>
                 <AxisLeft scale={yScale}/>
                 {/* <Group className="bar-graph">
@@ -58,9 +57,24 @@ class App extends Component {
                       onMouseLeave={d => e => hideTooltip()}
                     />)
                   }
+                  {
+                    data.map(d => <Bar key={`bar-${x(d)}`} width={10}
+                      height={height - yScale(y(d))}
+                      data={d}
+                      x={xScale(x(d))}
+                      y={yScale(y(d))}
+                      onMouseMove={d => e => showBasicTooltip({
+                        event: e,
+                        data: d,
+                        xScale,
+                        yScale
+                      })}
+                      onMouseLeave={d => e => hideTooltip()}
+                    />)
+                  }
                 </Group> */}
-                <Group className="line-graph">
-                  <LinePath data={data}
+                {/* <Group className="line-graph">
+∫                  <LinePath data={data}
                     xScale={xScale}
                     yScale={yScale}
                     x={x}
@@ -83,7 +97,7 @@ class App extends Component {
                       yScale
                     })}
                     onMouseLeave={d => e => hideTooltip()}/>
-                </Group>
+                </Group> */}
               </Group>
             }
           }
