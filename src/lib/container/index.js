@@ -1,8 +1,9 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { withTooltip, Tooltip } from '../tooltip'
 import { localPoint } from '@vx/event';
 import { Group } from '@vx/group'
+import { Line } from '../shape'
 import { bisector } from 'd3'
 
 class Container extends PureComponent {
@@ -22,25 +23,30 @@ class Container extends PureComponent {
     }
   }
   showLineTooltip = ({event, data, xScale}) => {
-    const { showTooltip, x } = this.props
+    const { showTooltip, x, padding } = this.props
     const { x: posX } = localPoint(event)
     const x0 = xScale.invert(posX)
     const bisect = bisector(x).left
-    const index = bisect(data, x0, 1)
+    const index = bisect(data, x0)
     const d0 = data[index - 1];
+
+    this.hasLine = true
 
     showTooltip({
       tooltipData: d0,
-      tooltipLeft: x + 10,
+      tooltipLeft: posX - padding.left,
       tooltipTop: 20,
     });
   }
   showBasicTooltip = ({event, data}) => {
-    const { showTooltip } = this.props
+    const { showTooltip, padding } = this.props
     const { x, y } = localPoint(event)
+
+    this.hasLine = false
+
     showTooltip({
       tooltipTop: y,
-      tooltipLeft: x + 10,
+      tooltipLeft: x - padding.left,
       tooltipData: data
     })
   }
@@ -60,7 +66,6 @@ class Container extends PureComponent {
       hideTooltip, tooltipData, tooltipTop, tooltipLeft,
       children } = this.props
     const size = this.getContainerSize()
-    
     return (
       <div>
         <svg width={width} height={height}>
@@ -71,15 +76,25 @@ class Container extends PureComponent {
               showLineTooltip: this.showLineTooltip,
               hideTooltip
             })}
+            {
+              tooltipData && this.hasLine
+                ? <Line
+                  from={{ x: tooltipLeft - 1, y: 0 }}
+                  to={{ x: tooltipLeft - 1, y: height }}
+                />
+                : ''
+            }
           </Group>
         </svg>
         {
           tooltipData
             ? <Tooltip
-              top={tooltipTop - 12}
-              left={tooltipLeft + 12}
+              top={tooltipTop}
+              left={tooltipLeft + 10 + padding.left}
             >
-              {tooltip && tooltip(tooltipData)}
+              <Fragment>
+                {tooltip && tooltip(tooltipData)}
+              </Fragment>
             </Tooltip>
             : ''
         }

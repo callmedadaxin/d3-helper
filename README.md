@@ -1,108 +1,145 @@
 # d3-helper
-d3辅助工具库，用于生成常用的坐标轴，tooltip等
+d3图形库，在[vx](https://github.com/hshoff/vx)上的二次封装
+
+***更多的是对于图形库复用的思考***
+***核心：基础图形的复用及拼接***
 
 ## Why
-在使用d3进行数据可视化操作时，已经非常方便了，直接使用d3的各种shape可直接生成折线，柱形图等等等等。直接使用d3操作，既方便又灵活。
-但是我们往往需要重复几个类似的动作：
+1. 使用d3以命令式的方式来进行图形的书写，不太便于图形的复用，往往需要通过函数以及一大堆参数来重用
+2. 使用d3来进行图形的渲染已经非常方便，再抽象成echart那种根据配置进行渲染的方式没有太大必要，费时费力且效果差不多。
+3. vx以单元拼接的方式来进行书写，非常满足我们的要求
+4. vx默认样式并不符合我们的要求，重复的设置各种props时，跟我们使用d3的过程其实类似，依旧复杂
+5. 我们需要一种可变的复用单元。
 
-- 渲染容器
-- 计算横纵坐标的scale
-- 渲染坐标轴,并对其进行样式，格式调整
-- 添加tooltip事件及样式
+## 使用方式
+vx非常巧妙的定义了各种图形单元，支持以生命式使用图形单元进行拼接，
+我们对vx的默认样式进行了重置，并且添加了Container元素，用于定义图形容器
 
-对于这些重复且相对复杂的动作，我们更希望对其进行一键输出，让我们的更专注与图形上去，因此就有了这个工具库。
-工具库后续还会不断的进行扩展。
-
-## demos
-[部分案例代码](https://github.com/callmedadaxin/d3-helper/tree/master/src/demos)
-
-## Container
-通过配置快速生成容器及坐标轴坐标轴，可定义各种样式
-
-### 简介
-1.每个坐标轴主要有以下元素：
-
-- line 坐标轴线
-- splitLine 分割线
-- text 文字标签
-
-2.每个元素都可通过以下字段来控制
-
-- show 显示隐藏
-- styles 控制样式
-- class 控制class
-
-3.ticks可以控制每个坐标轴展示的数量
-这里对d3.ticks做了改进，可以精确按照设置的梳理进行展示
-
-### 使用方式
 ``` js
-componentDidMount = () => {
-  const target = d3.select(this.graph)
-  const container = new Container(target, config)
+import { appleStock } from '@vx/mock-data'
+import { scaleLinear, scaleTime } from '@vx/scale'
 
-  // 通过render渲染容器，并可获取容器内部的数据结果
-  const {
-    width, // 容器内部宽高，计算数据对应的长度时，请用此值进行计算
-    height,
-    xScale, // 数据的scale, 用于计算宽高
-    yScale
-  } = container.render([{
-    type: 'a',
-    value: 100
-  }, {
-    type: 'b',
-    value: 200
-  }, {
-    type: 'c',
-    value: 150
-  }])
+import { Group } from 'lib/Group'
+import { AxisLeft, AxisBottom } from 'lib/axis'
+import { Grid } from 'lib/grid'
+import { Bar, LinePath, AreaClosed } from 'lib/shape'
+
+// 定义getter
+const x = d => new Date(d.date);
+const y = d => +d.close;
+
+// 定义容器配置
+const padding = {
+  top: 20,
+  left: 40,
+  bottom: 20,
+  right: 20
+}
+
+export default class LineGraph {
+  render () {
+    return (
+      <Container width={1000} height={200}
+        padding={padding}
+        x={x} y={y}>
+          {
+            ({width, height }) => {
+              // 根据数据定义x,y轴的scale
+              const xScale = scaleTime({
+                rangeRound: [0, width],
+                domain: d3.extent(data, x)
+              })
+              const yScale = scaleLinear({
+                rangeRound: [height, 0],
+                domain: d3.extent(data, y)
+              })
+
+              return <Group>
+                <Grid width={width} height={height} xScale={xScale} yScale={yScale}/>
+                <AxisBottom top={height} scale={xScale}/>
+                <AxisLeft scale={yScale}/>
+                <AreaClosed data={data}
+                  xScale={xScale}
+                  yScale={yScale}
+                  x={x}
+                  y={y} />
+              </Group>
+            }
+          }
+        </Container>
+      </div>
+    );
+  }
 }
 ```
 
-### 全部配置
+## withConfig
+很多时候，我们更希望重用自定义单元，比如我的系统里有两种通用的折线样式，提供该方法进行封装，
+我们可以在基础单元上不断的进行上层封装，以便灵活快速的使用。
+
 ``` js
-export default {
-  width: 1000, // 图的宽度
-  height: 100, // 图的高度
-  padding: {  // padding, 用于给坐标轴等留出空间
-    top: 20,
-    right: 20,
-    left: 20,
-    bottom: 20
-  },
-  xAxis: {
-    type: 'value', // 坐标轴类型，对应到d3的scale, 目前有三种： value, time, category
-    getter: d => d, // 根据数据获取值的getter, 如 d => d.time
-    show: true, // 是否展示
-    line: { // 坐标轴线的控制
-      show: true,
-      ticks: { // 坐标轴tick的控制
-        show: true,
-        num: null,
-        size: 3,
-        padding: 3
-      },
-      styles: {
-        color: null,
-      }
-    },
-    splitLine: { // 坐标轴分割线的控制
-      show: true,
-      ticks: null,
-      styles: {
-        color: '#ccc'
-      }
-    },
-    text: { // 坐标轴标签文字的控制
-      show: true,
-      formatter: d => d,
-      styles: {
-        color: null,
-        fontSize: null
-      }
+import { LinePath } from 'lib/shape'
+import { withConfig } from 'lib/util'
+
+export const DashedRedLine = withConfig({
+  stroke: 'red',
+  strokeWidth: 1,
+  strokeDasharray
+})(LinePath)
+
+export const BoldBlueLine = withConfig({
+  stroke: 'green',
+  strokeWidth: 4
+})(LinePath)
+```
+
+## tooltip
+在进行tooltip提示时，往往会比较吃力，我们也在配合vx/shape进行统新的封装,
+提供两种tooltip类型，baseTooltip, lineTooltip
+
+``` js
+return <Container padding={padding}
+  x={x} y={y}
+  // 定义tooltip格式
+  tooltip={(data) => <div>{String(x(data))}: {y(data)}</div>}>
+  {
+    ({width, height, showBasicTooltip, showLineTooltip, hideTooltip }) => {
+      const xScale = scaleTime({
+        rangeRound: [0, width],
+        domain: d3.extent(data, x)
+      })
+      const yScale = scaleLinear({
+        rangeRound: [height, 0],
+        domain: d3.extent(data, y)
+      })
+
+      return <Group>
+        <Grid width={width} height={height} xScale={xScale} yScale={yScale}/>
+        <AxisBottom top={height} scale={xScale}/>
+        <AxisLeft scale={yScale}/>
+        <Group className="line-graph">
+          <AreaClosed data={data}
+            xScale={xScale}
+            yScale={yScale}
+            x={x}
+            y={y} />
+          // 定义整个图形触发区间
+          <Bar x={0}
+            y={0}
+            width={width}
+            height={height}
+            fill="transparent"
+            data={data}
+            onMouseMove={d => e => showLineTooltip({
+              event: e,
+              data: d,
+              xScale,
+              yScale
+            })}
+            onMouseLeave={d => e => hideTooltip()}/>
+        </Group>
+      </Group>
     }
-  },
-  xAxis: {}
-}
+  }
+</Container>
 ```
