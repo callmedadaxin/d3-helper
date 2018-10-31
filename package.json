@@ -1,8 +1,8 @@
 {
   "name": "d3-vx-helper",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "d3 and vx helper for our team",
-  "main": "./build/static/main.js",
+  "main": "build/static/js/main.js",
   "dependencies": {
     "@vx/axis": "^0.0.179",
     "@vx/event": "^0.0.179",

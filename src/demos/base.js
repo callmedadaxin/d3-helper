@@ -5,7 +5,7 @@ import * as d3 from 'd3'
 import { letterFrequency, appleStock } from '@vx/mock-data';
 import { scaleBand, scaleLinear, scaleTime } from '@vx/scale'
 import { Group } from '@vx/group'
-import { Container, AxisLeft, AxisBottom, AxisRight, AxisTop } from '../main'
+import { Container, AxisLeft, AxisBottom, AxisRight, AxisTop } from 'd3-vx-helper'
 // import { Grid, GridRows } from '../lib/grid'
 // import { Bar, LinePath, AreaClosed } from '../lib/shape'
 
