@@ -33,12 +33,7 @@ npm i d3-vx-helper
 
 ``` js
 import { appleStock } from '@vx/mock-data'
-import { scaleLinear, scaleTime } from '@vx/scale'
-
-import { Group } from 'lib/Group'
-import { AxisLeft, AxisBottom } from 'lib/axis'
-import { Grid } from 'lib/grid'
-import { Bar, LinePath, AreaClosed } from 'lib/shape'
+import { scaleLinear, scaleTime, Group, AxisLeft, AxisBottom, Grid, Bar, LinePath, AreaClosed } from 'd3-vx-helper'
 
 // 定义getter
 const x = d => new Date(d.date);
@@ -94,8 +89,7 @@ export default class LineGraph {
 我们可以在基础单元上不断的进行上层封装，以便灵活快速的使用。
 
 ``` js
-import { LinePath } from 'lib/shape'
-import { withConfig } from 'lib/util'
+import { LinePath, withConfig } from 'd3-vx-helper'
 
 export const DashedRedLine = withConfig({
   stroke: 'red',
@@ -188,7 +182,7 @@ class Area {
 我们可以使用axis.tickValues使用指定的数组作为刻度。在这里我们提供一个方法，来自动获取精准数量的指定数组。
 
 ``` js
-import { tickValues } from 'lib/util'
+import { tickValues } from 'd3-vx-helper'
 
 <AxisBottom tickValues={tickValues(4, [0, d3.max(data)])}>
 ```
