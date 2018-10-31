@@ -74,7 +74,10 @@ class Container extends PureComponent {
               ...size,
               showBasicTooltip: this.showBasicTooltip,
               showLineTooltip: this.showLineTooltip,
-              hideTooltip
+              hideTooltip,
+              tooltipData,
+              tooltipTop,
+              tooltipLeft
             })}
             {
               tooltipData && this.hasLine
