@@ -1,3 +1,4 @@
+import React from 'react'
 import { AxisLeft as Left, AxisBottom as Bottom, AxisTop as Top, AxisRight as Right } from '@vx/axis'
 import { withConfig } from '../utils'
 
@@ -20,7 +21,7 @@ const textConfig = {
 
 export const AxisLeft = withConfig({
   ...config,
-  tickLabelProps: ({ tick, index }) => ({
+  tickLabelProps: (val, i) => ({
     dx: -2,
     dy: 4,
     ...textConfig,
@@ -28,19 +29,23 @@ export const AxisLeft = withConfig({
   })
 })(Left)
 
-export const AxisBottom = withConfig({
-  ...config,
-  tickLabelProps: ({ tick, index }) => ({
+export const AxisBottom = (props) => {
+  const { tickValues } = props
+  const anchor = i => {
+    return i === 0 ? 'start' : i === tickValues.length - 1 ? 'end' : 'middle'
+  }
+  const tickLabelProps = (val, i) => ({
     dx: 0,
     dy: 0,
     ...textConfig,
-    textAnchor: 'middle'
+    textAnchor: tickValues ? anchor(i) : 'middle'
   })
-})(Bottom)
+  return <Bottom {...config} tickLabelProps={tickLabelProps} {...props}/>
+}
 
 export const AxisTop = withConfig({
   ...config,
-  tickLabelProps: ({ tick, index }) => ({
+  tickLabelProps: (val, i) => ({
     dx: 0,
     dy: -2,
     ...textConfig,
@@ -50,7 +55,7 @@ export const AxisTop = withConfig({
 
 export const AxisRight = withConfig({
   ...config,
-  tickLabelProps: ({ tick, index }) => ({
+  tickLabelProps: (val, i) => ({
     dx: 2,
     dy: 4,
     ...textConfig,
