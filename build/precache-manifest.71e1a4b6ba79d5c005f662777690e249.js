@@ -1,6 +1,6 @@
 self.__precacheManifest = [
   {
-    "revision": "d6cecf1112aa32b99092",
+    "revision": "64b619b776922245f448",
     "url": "/callmedadaxin/d3-helper/static/js/main.js"
   },
   {

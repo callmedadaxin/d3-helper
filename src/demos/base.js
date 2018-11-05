@@ -5,9 +5,9 @@ import * as d3 from 'd3'
 import { letterFrequency, appleStock } from '@vx/mock-data';
 import { scaleBand, scaleLinear, scaleTime } from '@vx/scale'
 import { Group } from '@vx/group'
-import { Container, AxisLeft, AxisBottom, tickValues, AxisRight, AxisTop } from '../lib'
+import { Container, AxisLeft, AxisBottom, tickValues, AxisRight, AxisTop, Grid } from '../lib'
 // import { Grid, GridRows } from '../lib/grid'
-// import { Bar, LinePath, AreaClosed } from '../lib/shape'
+import { Bar, LinePath, AreaClosed } from '../lib/shape'
 
 const x = d => new Date(d.date);
 const y = d => +d.close;
@@ -38,7 +38,7 @@ class App extends Component {
               })
 
               return <Group>
-                {/* <Grid width={width} height={height} xScale={xScale} yScale={yScale}/> */}
+                <Grid width={width} tickValues={[100, 105]} height={height} xScale={xScale} yScale={yScale}/>
                 <AxisBottom top={height} scale={xScale}/>
                 <AxisLeft scale={yScale}/>
                 {/* <Group className="bar-graph">
@@ -73,8 +73,8 @@ class App extends Component {
                     />)
                   }
                 </Group> */}
-                {/* <Group className="line-graph">
-∫                  <LinePath data={data}
+                <Group className="line-graph">
+                   <LinePath data={data}
                     xScale={xScale}
                     yScale={yScale}
                     x={x}
@@ -97,7 +97,7 @@ class App extends Component {
                       yScale
                     })}
                     onMouseLeave={d => e => hideTooltip()}/>
-                </Group> */}
+                </Group>
               </Group>
             }
           }

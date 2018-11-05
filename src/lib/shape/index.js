@@ -1,6 +1,6 @@
 import { Bar as B, LinePath as L, AreaClosed as AC, Line as Li } from '@vx/shape'
 import { withConfig } from '../utils'
-export { AreaStack, BarGroup, Pie  } from '@vx/shape'
+export { AreaStack, BarGroup, Pie, BarStack  } from '@vx/shape'
 
 export const Line = withConfig({
   stroke: '#e6e6e6'

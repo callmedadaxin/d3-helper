@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/callmedadaxin/d3-helper/precache-manifest.6d6030a30957895424764e30510cdb50.js"
+  "/callmedadaxin/d3-helper/precache-manifest.71e1a4b6ba79d5c005f662777690e249.js"
 );
 
 workbox.clientsClaim();

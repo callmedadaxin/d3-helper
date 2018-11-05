@@ -25,16 +25,19 @@ class Container extends PureComponent {
   showLineTooltip = ({event, data, xScale}) => {
     const { showTooltip, x, padding } = this.props
     const { x: posX } = localPoint(event)
-    const x0 = xScale.invert(posX)
+    const x0 = xScale.invert(posX - padding.left)
     const bisect = bisector(x).left
     const index = bisect(data, x0)
     const d0 = data[index - 1];
-
+    const d1 = data[index]
+    let d = d0;
+    if (d1 && x(d1)) {
+      d = x0 - x(d0) > x(d1) - x0 ? d1 : d0;
+    }
     this.hasLine = true
-
     showTooltip({
-      tooltipData: d0,
-      tooltipLeft: posX - padding.left,
+      tooltipData: d,
+      tooltipLeft: xScale(x(d)),
       tooltipTop: 20,
     });
   }

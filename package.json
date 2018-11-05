@@ -1,6 +1,6 @@
 {
   "name": "d3-vx-helper",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "description": "d3 and vx helper for our team",
   "main": "build/static/js/main.js",
   "dependencies": {
@@ -68,7 +68,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "publish": "npm run build && npm publish"
   },
   "eslintConfig": {
     "extends": "react-app"
